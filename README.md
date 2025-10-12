@@ -2,17 +2,17 @@
 
 ## overview
 
-Enables you to run Headscale inside of a docker container
+Enables you to run Headscale inside of a docker container, also generates a certificate to enable https://
 
 ## Prerequisites
 
 - Docker
 
-## Running the proyect
+## Running the project
 
 To create the proper directories and copy the config.yaml run the following command
 If you want to use this as an external headscale server, you need to change the server url in the config.yaml
-
+It also generates and adds certs so the clients can safely connect to the headscale server via UDP
 ```bash
 ./build.sh
 ```
