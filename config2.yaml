@@ -9,15 +9,13 @@
 #
 # https://myheadscale.example.com:443
 #
-server_url: https://headscale.local:443
+server_url: http://192.168.1.230:8080
 
 # Address to listen to / bind to on the server
 #
 # For production:
 # listen_addr: 0.0.0.0:8080
-listen_addr: 0.0.0.0:443
-tls_cert_path: /etc/headscale/certs/headscale.crt
-tls_key_path: /etc/headscale/certs/headscale.key
+listen_addr: 0.0.0.0:8080
 
 # Address to listen to /metrics and /debug, you may want
 # to keep this endpoint private to your internal network
@@ -60,7 +58,7 @@ derp:
   server:
     # If enabled, runs the embedded DERP server and merges it into the rest of the DERP config
     # The Headscale server_url defined above MUST be using https, DERP requires TLS to be in place
-    enabled: true
+    enabled: false
     # Region ID to use for the embedded DERP server.
     # The local DERP prevails if the region ID collides with other region ID coming from
     # the regular DERP config.
@@ -80,7 +78,7 @@ derp:
     # Tailscale clients. A missing key will be automatically generated.
     private_key_path: /var/lib/headscale/derp_server_private.key
 
-      # This flag can be used, so the DERP map entry for the embedded DERP server is not written automatically,
+    # This flag can be used, so the DERP map entry for the embedded DERP server is not written automatically,
     # it enables the creation of your very own DERP map entry using a locally available file with the parameter DERP.paths
     # If you enable the DERP server and set this to false, it is required to add the DERP server to the DERP map using DERP.paths
     automatically_add_embedded_derp_region: true
