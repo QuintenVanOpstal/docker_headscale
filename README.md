@@ -12,7 +12,8 @@ Enables you to run Headscale inside of a docker container, also generates a cert
 
 To create the proper directories and copy the config.yaml run the following command
 If you want to use this as an external headscale server, you need to change the server url in the config.yaml
-It also generates and adds certs so the clients can safely connect to the headscale server via UDP
+It also generates and adds certs so clients ronning on the same machine can safely connect to the headscale server via UDP
+Certs are not generated if they already exist. To connect from a different device, you should trust the ca.crt en the cert file. 
 ```bash
 ./build.sh
 ```

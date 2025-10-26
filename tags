@@ -10,7 +10,7 @@
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
 !_TAG_PROGRAM_VERSION	5.9.0	//
 Docker container for running headscale	README.md	/^# Docker container for running headscale$/;"	c
-EOF	build.sh	/^cat > headscale.cnf <<EOF$/;"	h
+EOF	build.sh	/^    cat > headscale.cnf <<EOF$/;"	h
 EOF	build2.sh	/^cat > openssl-san.cnf <<EOF$/;"	h
 Prerequisites	README.md	/^## Prerequisites$/;"	s	chapter:Docker container for running headscale
 Running the project	README.md	/^## Running the project$/;"	s	chapter:Docker container for running headscale

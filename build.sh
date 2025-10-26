@@ -7,39 +7,58 @@ mkdir -p ./headscale/{config,lib,run}
 
 cp config.yaml headscale/config/config.yaml
 
-mkdir -p headscale/config/certs
-cd headscale/config/certs
+# Go to the certs folder, and check if they exist. If they don't they are generated
 
-sudo openssl genrsa -out ca.key 4096
+mkdir -p ./certs
+cd certs
 
-sudo openssl req -x509 -new -nodes -key ca.key -sha256 -days 3650 \
-  -subj "/CN=Headscale CA" \
-  -out ca.crt
+if [[(! -f ca.key) || (! -f ca.crt) ]]; then
+    echo "generating ca.crt"
+    sudo openssl genrsa -out ca.key 4096 # generate key
 
-sudo openssl genrsa -out headscale.key 4096
+    sudo openssl req -x509 -new -nodes -key ca.key -sha256 -days 3650 \
+        -subj "/CN=Headscale CA" -out ca.crt # generate cert
+else
+    echo "Using existing ca.crt"
+fi
 
-# Generate openssl config with SAN
-cat > headscale.cnf <<EOF
-[req]
-prompt = no
-distinguished_name = dn
-req_extensions = v3_req
-
-[dn]
-CN = headscale.local
-
-[v3_req]
-subjectAltName = @alt_names
-
-[alt_names]
-DNS.1 = headscale.local
+if [[(! -f headscale.key) ]]; then
+    echo "generating headscale.crt"
+    sudo openssl genrsa -out headscale.key 4096 # generate key
+ 
+    # Generate openssl config with SAN
+    cat > headscale.cnf <<EOF
+        [req]
+        prompt = no
+        distinguished_name = dn
+        req_extensions = v3_req
+ 
+        [dn]
+        CN = headscale.local
+ 
+        [v3_req]
+        subjectAltName = @alt_names
+ 
+        [alt_names]
+        DNS.1 = headscale.local
 EOF
+    # generate cert
+    sudo openssl req -new -key headscale.key -out headscale.csr -config headscale.cnf 
+    # sign cert with ca cert
+    sudo openssl x509 -req -in headscale.csr -CA ca.crt -CAkey ca.key -CAcreateserial \
+        -out headscale.crt -days 365 -sha256 -extensions v3_req -extfile headscale.cnf
+else
+    echo "Using existing headscale.crt"
+fi
 
-sudo openssl req -new -key headscale.key -out headscale.csr -config headscale.cnf
+#copy into headscale/config/certs
 
-sudo openssl x509 -req -in headscale.csr -CA ca.crt -CAkey ca.key -CAcreateserial \
-  -out headscale.crt -days 365 -sha256 -extensions v3_req -extfile headscale.cnf
+mkdir -p ../headscale/config/certs
+sudo cp headscale.crt ../headscale/config/certs/headscale.crt
 
+# trust ca cert
 sudo cp ca.crt /usr/local/share/ca-certificates/
 sudo update-ca-certificates
-echo "$HOST_IP headscale.local" | sudo tee -a /etc/hosts
+
+# add headscale.local to the hostfile
+echo "$HOST_IP headscale.local" | sudo tee -a /etc/hosts 
