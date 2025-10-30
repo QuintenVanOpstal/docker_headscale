@@ -52,9 +52,10 @@ else
 fi
 
 #copy into headscale/config/certs
-
+echo "copy certificates"
 mkdir -p ../headscale/config/certs
 sudo cp headscale.key ../headscale/config/certs/headscale.key
+sudo cp headscale.crt ../headscale/config/certs/headscale.crt
 
 # trust ca cert
 sudo cp ca.crt /usr/local/share/ca-certificates/
