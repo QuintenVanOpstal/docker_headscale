@@ -54,7 +54,7 @@ fi
 #copy into headscale/config/certs
 
 mkdir -p ../headscale/config/certs
-sudo cp headscale.crt ../headscale/config/certs/headscale.crt
+sudo cp headscale.key ../headscale/config/certs/headscale.key
 
 # trust ca cert
 sudo cp ca.crt /usr/local/share/ca-certificates/
